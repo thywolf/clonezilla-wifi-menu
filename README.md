@@ -17,3 +17,4 @@ menuentry "Clonezilla live WiFi (Default settings, KMS with large font)"{
 }
 ```
 
+Note: Grub menu is here: <USB-DRIVE>:\boot\grub\grub.cfg
