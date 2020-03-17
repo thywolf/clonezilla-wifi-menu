@@ -1,3 +1,10 @@
+# REMARKS
+- Prepared for Ubuntu-based Clonezilla Live (alternative stable)
+- Tested only on one machine with one WiFi adapter
+- Feel free to fork and modify to your liking
+
+# HOW-TO
+
 1. Put ocs_prerun.sh in root drive of the USB
 
 2. Create/modify GRUB menu to enable ocs_prerun
@@ -10,7 +17,3 @@ menuentry "Clonezilla live WiFi (Default settings, KMS with large font)"{
 }
 ```
 
-REMARKS:
-- Prepared for Ubuntu-based Clonezilla Live (alternative stable)
-- Tested only on one machine with one WiFi adapter
-- Feel free to fork and modify to your liking
