@@ -21,6 +21,7 @@ function get_wlan()
   fi
 
   WLAN="$(sed "$choice!d" /tmp/wlans)"
+  dialog --infobox "Enabling $WLAN interface..." 3 41
   ifconfig $WLAN down 2>&1 /dev/null
   ifconfig $WLAN up 2>&1 /dev/null
   if [ $? -ne 0 ]; then
