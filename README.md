@@ -9,3 +9,8 @@ menuentry "Clonezilla live WiFi (Default settings, KMS with large font)"{
   initrd /live/initrd.img
 }
 ```
+
+REMARKS:
+- Prepared for Ubuntu-based Clonezilla Live (alternative stable)
+- Tested only on one machine with one WiFi adapter
+- Feel free to fork and modify to your liking
