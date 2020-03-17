@@ -1,9 +1,9 @@
-# REMARKS
+## REMARKS
 - Prepared for Ubuntu-based Clonezilla Live (alternative stable)
 - Tested only on one machine with one WiFi adapter
 - Feel free to fork and modify to your liking
 
-# HOW-TO
+## HOW-TO
 
 1. Put ocs_prerun.sh in root drive of the USB
 
