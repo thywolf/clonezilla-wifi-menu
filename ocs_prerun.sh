@@ -66,11 +66,9 @@ function get_ssid()
 function get_password()
 {
   PASSWORD="$(dialog --clear --stdout --title "WiFi Setup" --insecure --passwordbox "Enter password for "$SSID":" 0 0)"
-
   if [ $? -ne 0 ]; then
     return 1
   fi
-
   return 0
 }
 
@@ -78,9 +76,21 @@ function update_conf()
 {
   dialog --infobox "Connecting..." 3 17
   wpa_passphrase $SSID $PASSWORD > /etc/wpa_supplicant.conf
+  if [ $? -ne 0 ]; then
+    dialog --clear --title "WiFi Setup" --msgbox "ERROR: There was a problem with your SSID or password!" 6 41
+    return 1
+  fi
   wpa_supplicant -B -D wext -i $WLAN -c /etc/wpa_supplicant.conf 2>&1 > /dev/null
+  if [ $? -ne 0 ]; then
+    dialog --clear --title "WiFi Setup" --msgbox "ERROR: There was a problem with wpa_supplicant!" 6 41
+    return 1
+  fi
   dhclient $WLAN 2>&1 > /dev/null
-  return $?
+  if [ $? -ne 0 ]; then
+    dialog --clear --title "WiFi Setup" --msgbox "ERROR: There was a problem with dhclient!" 6 41
+    return 1
+  fi
+  return 0
 }
 
 function test_connection()
@@ -104,16 +114,8 @@ while true; do
 
   case $choice in
       1)
-        if get_wlan; then
-          if get_ssid; then
-            if get_password; then
-              if update_conf; then
-                if test_connection; then
-                  exit
-                fi
-              fi
-            fi
-          fi
+        if get_wlan && get_ssid && get_password && update_conf && test_connection; then
+          exit
         fi
         ;;
       2)
@@ -125,4 +127,3 @@ while true; do
     esac
 
 done
-s
