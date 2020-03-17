@@ -2,7 +2,7 @@
 
 function get_wlan()
 {
-  rm /tmp/wlans 2>&1 > /dev/null
+  rm /tmp/wlans > /dev/null 2>&1
   iw dev | awk '$1=="Interface"{print $2}' > /tmp/wlans
   if [ ${PIPESTATUS[0]} -ne 0 ]; then
     dialog --clear --title "WiFi Setup" --msgbox "ERROR: No wireless interfaces found." 5 41
@@ -22,8 +22,8 @@ function get_wlan()
 
   WLAN="$(sed "$choice!d" /tmp/wlans)"
   dialog --infobox "Enabling $WLAN interface..." 3 41
-  ifconfig $WLAN down 2>&1 > /dev/null
-  ifconfig $WLAN up 2>&1 > /dev/null
+  ifconfig $WLAN down > /dev/null 2>&1
+  ifconfig $WLAN up > /dev/null 2>&1
   if [ $? -ne 0 ]; then
     dialog --clear --title "WiFi Setup" --msgbox "ERROR: An error occurred while enabling $WLAN interface." 6 41
     return 1
@@ -33,7 +33,7 @@ function get_wlan()
 
 function get_ssid()
 {
-  rm /tmp/ssids 2>&1 > /dev/null
+  rm /tmp/ssids > /dev/null 2>&1
   dialog --infobox "Searching for nearby WiFi networks..." 3 41
   iwlist $WLAN scan | awk -F ':' '/ESSID:/ {print $2;}' | sed -e s/\"//g > /tmp/ssids
   if [ ${PIPESTATUS[0]} -ne 0 ]; then
@@ -80,12 +80,14 @@ function update_conf()
     dialog --clear --title "WiFi Setup" --msgbox "ERROR: There was a problem with your SSID or password!" 6 41
     return 1
   fi
-  wpa_supplicant -B -D wext -i $WLAN -c /etc/wpa_supplicant.conf 2>&1 > /dev/null
+  killall wpa_supplicant > /dev/null 2>&1
+  wpa_supplicant -B -D wext -i $WLAN -c /etc/wpa_supplicant.conf > /dev/null 2>&1
   if [ $? -ne 0 ]; then
     dialog --clear --title "WiFi Setup" --msgbox "ERROR: There was a problem with wpa_supplicant!" 6 41
     return 1
   fi
-  dhclient $WLAN 2>&1 > /dev/null
+  dhclient $WLAN -r > /dev/null 2>&1
+  dhclient $WLAN > /dev/null 2>&1
   if [ $? -ne 0 ]; then
     dialog --clear --title "WiFi Setup" --msgbox "ERROR: There was a problem with dhclient!" 6 41
     return 1
@@ -100,7 +102,7 @@ function test_connection()
     return 1
   fi
   dialog --infobox "Pinging $HOST..." 3 30
-  ping -c 1 $HOST 2>&1 > /dev/null
+  ping -c 1 $HOST > /dev/null 2>&1
   if [ $? -ne 0 ]; then
     dialog --clear --title "WiFi Setup" --msgbox "Pinging "$HOST" failed!" 5 41
     return 1
